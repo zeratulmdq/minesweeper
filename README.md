@@ -1,6 +1,26 @@
 Check the progress [here](PROCESS.md). All decisions will be explained there.
+There's a different repo for the UI. Check it [here](https://github.com/zeratulmdq/minesweeper-ui)
 
 ## DOCS & USAGE
+
+### Installation
+
+```bash
+# Clone this repo
+git clone https://github.com/zeratulmdq/minesweeper.git
+
+# cd into the folder
+cd minesweeper
+
+# Install dependencies
+composer install
+
+# Run the server
+php artisan serve
+
+# Play!
+chromium http://localhost:8000
+```
 
 ### Entities
 ```js

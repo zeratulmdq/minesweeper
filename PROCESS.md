@@ -7,7 +7,7 @@
 - [X] Detect when game is over
 - [X] Persistence
 - [X] Time tracking
-- [ ] Ability to start a new game and preserve/resume the old ones
+- [X] Ability to start a new game and preserve/resume the old ones
 - [X] Ability to select the game parameters: number of rows, columns, and mines
 - [ ] Ability to support multiple users/accounts
 
@@ -45,4 +45,13 @@ A lot of considerations here. Time was limited so I used things I wouldn't norma
 2) There's no routing configured, a lot of v-if/v-else around.
 3) Missing components. Some stuff is wrapped in a HTML element to use v-if/v-else.
 4) API calls should go into a dedicated service.
-5) There's a dedicated repository for this, I don't like the way Laravel handles frontend.
+5) There's a dedicated repository for this, I don't like the way Laravel handles frontend. Anyway, this repo has de built version of the UI and it's ready to use.
+
+### 14:30Hs
+End of time.
+
+* Minor fixes.
+* 45min of manual testing. Known issues:
+
+1) There's a problem with a Square method I couldn't fix so I move the logic to the controller. Not the best but it works (need some time to debug).
+2) The logic implemented to reveal a mine and neighbours sometimes excedes the MAXIMUM_STACK_SIZE. 10 x 10 x 10 is a safe way to test the app but bigger grids could potentially ruin your life.

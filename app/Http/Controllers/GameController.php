@@ -51,6 +51,47 @@ class GameController extends Controller
      * @param  Square      $square      
      * @return Minesweeper
      */
+    /*public function reveal(Minesweeper $minesweeper, Square $square) 
+    {
+    	if($square->minesweeper != $minesweeper)
+    		abort(422, "That square ain't a piece of your game");
+
+    	if($minesweeper->over)
+    		abort(403, "Game already over");
+
+    	DB::beginTransaction();
+
+    	if($square->hasMine)
+    	{
+    		$minesweeper->over = true;
+    		$square->status = 1;
+    	} 
+    	else 
+    	{
+    		$around = $square->reveal();
+    	}
+
+    	if(!$square->neighbours)
+		{
+			$around->each(function($n){
+				if($n->status == 0)
+					$n->reveal();
+			});
+		}
+
+    	$minesweeper->hasWon();
+    	$minesweeper->save();
+    	$minesweeper->squares;
+    	DB::commit();
+
+		return $minesweeper;
+    }*/
+
+    /**
+     * The two methods below belong to Square model
+     * but I'm having an error and I don't have the time to debug.
+     * GameController::reveal should be the one above this comment
+     */
     public function reveal(Minesweeper $minesweeper, Square $square) 
     {
     	if($square->minesweeper != $minesweeper)
@@ -67,16 +108,8 @@ class GameController extends Controller
     	} 
     	else 
     	{
-    		$square->reveal();
+    		$this->revealMine($square);
     	}
-
-    	if(!$square->neighbours)
-		{
-			$square->around->each(function($n){
-				if($n->status == 0)
-					$n->reveal();
-			});
-		}
 
     	$minesweeper->hasWon();
     	$minesweeper->save();
@@ -84,5 +117,32 @@ class GameController extends Controller
     	DB::commit();
 
 		return $minesweeper;
+    }
+
+    private function revealMine($square)
+    {
+    	$neighbours = $square->minesweeper->squares->filter(function($neighbour) use ($square) {
+			return
+				$neighbour->row >= $square->row - 1 && 
+				$neighbour->row <= $square->row + 1 && 
+				$neighbour->column >= $square->column - 1 && 
+				$neighbour->column <= $square->column + 1 &&
+				!($neighbour->column == $square->column && $neighbour->row == $square->row);
+		});
+
+		$square->neighbours = $neighbours->reduce(function ($carry, $neighbour) {
+		    return $carry + $neighbour->hasMine;
+		});
+
+		$square->status = 1;
+		$square->save();
+
+		if(!$square->neighbours)
+		{
+			$neighbours->each(function($square){
+				if($square->status == 0)
+					$this->revealMine($square);
+			});
+		}
     }
 }

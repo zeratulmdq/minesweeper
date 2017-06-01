@@ -32,7 +32,7 @@ class Square extends Model
      */
     public function reveal()
     {
-    	$this->around = $this->minesweeper->squares->filter(function($neighbour) {
+    	$around = $this->minesweeper->squares->filter(function($neighbour) {
 			return
 				$neighbour->row >= $this->row - 1 && 
 				$neighbour->row <= $this->row + 1 && 
@@ -41,14 +41,14 @@ class Square extends Model
 				!($neighbour->column == $this->column && $neighbour->row == $this->row);
 		});
 
-		$this->neighbours = $this->around->reduce(function ($carry, $neighbour) {
+		$this->neighbours = $around->reduce(function ($carry, $neighbour) {
 		    return $carry + $neighbour->hasMine;
 		});
 
 		$this->status = 1;
 		$this->save();
 
-		return $this;
+		return $around;
     }
 
     
