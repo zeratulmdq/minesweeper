@@ -1,7 +1,7 @@
 # DEVIGET coding challenge
 
 - [X] Design and implement  a documented RESTful API for the game (think of a mobile app for your API)
-- [ ] Implement an API client library for the API designed above. Ideally, in a different language, of your preference, to the one used for the API
+- [X] Implement an API client library for the API designed above. Ideally, in a different language, of your preference, to the one used for the API
 - [X] When a cell with no adjacent mines is revealed, all adjacent squares will be revealed (and repeat)
 - [ ] Ability to 'flag' a cell with a question mark or red flag
 - [X] Detect when game is over
@@ -26,7 +26,7 @@
 To create a new game. I prefer to return the created instance to avoid another hit to the API. It could have been a link to the resource as well.
 ```
 
-### 12:40Hs
+### 12:25Hs
 * Another functional endpoint:
 ```bash
 # PATCH /games/{id}/squares/{id}/reveal
@@ -37,3 +37,12 @@ Every model is saved into the database. Performance would have been greater if I
 
 * Time tracking
 Returning the created_at field allows to implement time tracking client-side easily.
+
+### 13:45Hs
+* Vue.js SPA
+A lot of considerations here. Time was limited so I used things I wouldn't normally use. 
+1) Instead of a central bus to communicate between components I prefer to use a Vuex store. 
+2) There's no routing configured, a lot of v-if/v-else around.
+3) Missing components. Some stuff is wrapped in a HTML element to use v-if/v-else.
+4) API calls should go into a dedicated service.
+5) There's a dedicated repository for this, I don't like the way Laravel handles frontend.
