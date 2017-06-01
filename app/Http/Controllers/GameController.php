@@ -42,9 +42,47 @@ class GameController extends Controller
 
     	return $minesweeper;
     }
-    
-    public function reveal(Minesweeper $minesweeper, Square $square)
+
+    /**
+     * Update selected game and associated squares
+     * to a REVEAL event
+     * 
+     * @param  Minesweeper $minesweeper 
+     * @param  Square      $square      
+     * @return Minesweeper
+     */
+    public function reveal(Minesweeper $minesweeper, Square $square) 
     {
-    	
+    	if($square->minesweeper != $minesweeper)
+    		abort(422, "That square ain't a piece of your game");
+
+    	if($minesweeper->over)
+    		abort(403, "Game already over");
+
+    	DB::beginTransaction();
+    	if($square->hasMine)
+    	{
+    		$minesweeper->over = true;
+    		$square->status = 1;
+    	} 
+    	else 
+    	{
+    		$square->reveal();
+    	}
+
+    	if(!$square->neighbours)
+		{
+			$square->around->each(function($n){
+				if($n->status == 0)
+					$n->reveal();
+			});
+		}
+
+    	$minesweeper->hasWon();
+    	$minesweeper->save();
+    	$minesweeper->squares;
+    	DB::commit();
+
+		return $minesweeper;
     }
 }

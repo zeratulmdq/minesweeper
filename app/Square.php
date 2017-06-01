@@ -20,8 +20,35 @@ class Square extends Model
 	 * 
 	 * @return Minesweeper
 	 */
-    public function minesweeper() {
+    public function minesweeper() 
+    {
     	return $this->belongsTo(Minesweeper::class);
+    }
+
+    /**
+     * Reveal the selected Square
+     * 
+     * @return this
+     */
+    public function reveal()
+    {
+    	$this->around = $this->minesweeper->squares->filter(function($neighbour) {
+			return
+				$neighbour->row >= $this->row - 1 && 
+				$neighbour->row <= $this->row + 1 && 
+				$neighbour->column >= $this->column - 1 && 
+				$neighbour->column <= $this->column + 1 &&
+				!($neighbour->column == $this->column && $neighbour->row == $this->row);
+		});
+
+		$this->neighbours = $this->around->reduce(function ($carry, $neighbour) {
+		    return $carry + $neighbour->hasMine;
+		});
+
+		$this->status = 1;
+		$this->save();
+
+		return $this;
     }
 
     
